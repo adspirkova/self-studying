@@ -8,17 +8,26 @@ const autoprefixer = require('gulp-autoprefixer');
 const csso = require('gulp-csso');
 const sourcemaps = require('gulp-sourcemaps');
 const fs   = require('fs');
+const browserslist = require('browserslist')
+
+// Your CSS/JS build tool code
+function process (source, opts) {
+  const browsers = browserslist(opts.overrideBrowserslist, {
+    stats: opts.stats,
+    path:  opts.file,
+    env:   opts.env
+  })
+}
  
 // creates default src folder structure
 function createStructure(done) {
     const folders = [
         'dist',
         'src',
-        // 'src',
+        'src',
         // 'src/fonts',
         'src/img',
         'src/scss',
-        'src/js'
     ];
     const files = [
         'src/index.html',
@@ -44,9 +53,7 @@ function createStructure(done) {
 // delete all assets in dist
 function cleanAssets(done) {
     return del(
-        ['dist/**/*.html',
-         //'dist/fonts/**/*', 
-         'dist/img/**/*'], 
+        ['dist/**/*.html', 'dist/fonts/**/*', 'dist/img/**/*'], 
         { force: true }
     );
 }
@@ -76,19 +83,13 @@ function compileScss(done) {
       .pipe(sourcemaps.init())
       .pipe(sass().on('error', sass.logError))
       .pipe(autoprefixer({
-        browsers: ['last 2 versions'],
+        overrideBrowserslist: ['last 5 version'],
         cascade: false
       }))
     //   .pipe(csso())
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest('dist/css'));
 }
-
-// Copy all images from src/img into dist
-function publishJavascript(done) {
-    return gulp.src('src/js/**/*')
-      .pipe(gulp.dest('dist/js'));
-  }
 
 
  
@@ -97,7 +98,6 @@ function watchFiles(done) {
     gulp.watch("src/**/*.html", gulp.series(publishHtml, reload));
     // gulp.watch("src/fonts/**/*", gulp.series(publishFonts, reload));
     gulp.watch("src/img/**/*", gulp.series(publishImages, reload));
-    gulp.watch("src/js/**/*", gulp.series(publishJavascript, reload));
     gulp.watch("src/scss/**/*.scss", gulp.series(compileScss, reload));
 }
 
@@ -119,4 +119,4 @@ function reload(done) {
  
 // export tasks
 exports.structure = createStructure;
-exports.watch = gulp.series(cleanAssets, publishHtml, /* publishFonts, */ publishImages, publishJavascript, compileScss, serve, watchFiles);
+exports.watch = gulp.series(cleanAssets, publishHtml, publishImages, compileScss, serve, watchFiles);

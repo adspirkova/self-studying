@@ -1,0 +1,2 @@
+*{box-sizing:border-box}body{color:#00f;margin:0 auto;padding:20px}body .app,body .controlPanel{position:relative;display:flex;flex-wrap:wrap;align-items:center}body .app{width:280px;height:280px;justify-content:center}body .controlPanel{justify-content:right}td,tr{width:20px;height:20px;color:#fff;font-weight:700;font-size:9px}.div-1{background-color:#adff2f}.div-2{background-color:pink}.div-3{background-color:purple}.div-4{background-color:#00f}.div-5{background-color:red}.div-6{background-color:orange}
+/*# sourceMappingURL=style.css.map */
